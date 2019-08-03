@@ -1,4 +1,4 @@
-package A2S;
+package steam;
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
@@ -7,13 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 public class A2S {
-	/*
-	 * Servers to test
-	 * 181.214.149.99:27015
-	 * 	173.234.24.146:27059
-	 * 176.57.135.74:28815
-	 * */
-
+	
+	private String IP;
+	private int PORT;
+	
+	public A2S(String IP, int PORT) {
+		this.IP = IP;
+		this.PORT = PORT;
+	}
 	private static String readNullTerminatedString(ByteBuffer data) throws IOException {
 		String str = new String();
 		int _byte = data.get();
@@ -55,13 +56,13 @@ public class A2S {
 		return info;
   	
 	}
-	public static Map<String, Object> info(String IP, int port){
+	public Map<String, Object> query(){
 		
 		DatagramSocket socket = null;
 		Map<String, Object> results =  new HashMap<String, Object>();;
 	
 		try {
-			InetAddress host = InetAddress.getByName(IP) ;
+			InetAddress host = InetAddress.getByName(this.IP) ;
 			socket =  new DatagramSocket();
 		
 			byte [] data = {
@@ -71,7 +72,7 @@ public class A2S {
 					(byte)0x69, (byte)0x6E, (byte)0x65, (byte)0x20, (byte)0x51,
 					(byte)0x75, (byte)0x65, (byte)0x72, (byte)0x79, (byte)0x00};
 			
-	        DatagramPacket packet = new DatagramPacket( data, data.length, host, port ) ;
+	        DatagramPacket packet = new DatagramPacket( data, data.length, host, this.PORT ) ;
 	        socket.send(packet);
 	        socket.setSoTimeout(2000) ;
 	         
