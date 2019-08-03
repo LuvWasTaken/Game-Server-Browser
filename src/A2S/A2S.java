@@ -13,26 +13,7 @@ public class A2S {
 	 * 	173.234.24.146:27059
 	 * 176.57.135.74:28815
 	 * */
-	public static void main(String[] args) {
-		Scanner in = new Scanner(System.in);
-		
-		System.out.print("Please enter IP > ");
-		String IP = in.nextLine();
-		System.out.print("Please enter port > ");
-		int port = in.nextInt();
-			
-		System.out.println(info(IP, port));
-		
-		in.close();
-			
-			
-			//System.out.println(info("181.214.149.99", 27015));
-			
-		
-		
-		
-		
-	}
+
 	private static String readNullTerminatedString(ByteBuffer data) throws IOException {
 		String str = new String();
 		int _byte = data.get();
@@ -48,7 +29,6 @@ public class A2S {
 	{
 		Map<String, Object> info = new HashMap<String, Object>();
 		ByteBuffer response = ByteBuffer.wrap(packet.getData());
-		response = response.order(ByteOrder.LITTLE_ENDIAN);
 		
 		response.position(response.position() + 4); // Skip 4 bytes
 		
@@ -66,6 +46,11 @@ public class A2S {
 		info.put("enviroment", (char)response.get());
 		info.put("visibility", response.get());
 		info.put("vac", response.get());	
+		info.put("version", readNullTerminatedString(response));
+		response.position(response.position() + 1);
+		response = response.order(ByteOrder.LITTLE_ENDIAN);
+		info.put("game-port", response.getShort());
+		
 		
 		return info;
   	
@@ -95,9 +80,6 @@ public class A2S {
 	        
 	        results = read(packet);
 
-	        
-	       
-			
 		}
 		catch(Exception e)
 		{
